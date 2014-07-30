@@ -727,7 +727,13 @@ public final class HttpServer2 implements FilterContainer {
       throw new FileNotFoundException("webapps/" + appName
           + " not found in CLASSPATH");
     String urlString = url.toString();
-    return urlString.substring(0, urlString.lastIndexOf('/'));
+
+    // Some ClassLoader like URLClassLoader return path with a slash at end
+    if (urlString.endsWith("/")) {
+      return urlString.substring(0, urlString.length() - 1).substring(0, urlString.lastIndexOf('/'));
+    } else {
+      return urlString.substring(0, urlString.lastIndexOf('/'));
+    }
   }
 
   /**
